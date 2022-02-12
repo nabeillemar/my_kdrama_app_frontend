@@ -7,11 +7,38 @@
     </head>
     <body>
 
-        <div class="container" id="kdramas-container"></div>
+ 
+            <div class="form-container">
+                <form id="create-kdrama-form" style="">
+                    <h3> Add Your KDrama!</h3>
+
+                    <input id='title' type="text" name="title" value="" placeholder="Enter the title of your KDrama..." class="input-text">
+                    <br><br>
+                    <textarea id='comment' name="comment" rows="5" cols="50" value="" placeholder="Enter your comments here..."></textarea>
+                    <br><br>
+                    <input id='cover_photo' type="text" name="cover_photo" value="" placeholder="Enter the poster image URL..." class="input-text">
+                    <br><br>
+                    
+                    <p> Choose a Genre</p>
+                    <select id="categories" name="categories">
+                    <option value="1">Art</option>
+                    <option value="2">Tech</option>
+                    <option value="3">Science</option>
+                    </select>
+                    <br><br>
+                    
+
+                    <input id= 'create-button' type="submit" name="submit" value="Add your KDrama!" class="submit">
+                    <br><br>
+
+                </form>
 
 
+            </div>
+            
+            <div id="kdramas-container">
 
-
+            </div>
 
 
 
