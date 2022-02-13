@@ -43,18 +43,53 @@ function createFormHandler(e) { // not working? what kind of fetch do we want to
     e.preventDefault()
     const title = document.querySelector('#title').value // how does this get connected to the form updated ? 
     const comment = document.querySelector('#comment').value
-    const coverPhoto = document.querySelector('#cover_photo').value
-    const category = document.querySelector('#categories').value
-    const categoryId = parseInt(category) //the category id 
-    postFetch(title, comment, coverPhoto, categoryId)
+    const cover_photo = document.querySelector('#cover_photo').value
+    const categoryId = parseInt(document.querySelector('#categories').value) //the category id 
+    const release_year = document.querySelector('#release_year').value
+    const watched = document.querySelector('#watched').value
+    const my_rating = document.querySelector('#my_rating').value
+    const where_to_watch = document.querySelector('#where_to_watch').value
+    postFetch(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, categoryId)
 }
 
-function postFetch(title, comment, cover_photo, category_id) { // can name whatever we want here but make sure they are in order 
-    console.log();
 
-}
+function postFetch(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id) { // can name whatever we want here but make sure they are in order 
+    // confirm these values are coming through properly
+    console.log(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id);
+    // build body object
+    let bodyData = {title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id}
+  
+    fetch(k_dramasIndexPage, {
+      // POST request, the verb is different rails is routing us to the create action it has the same endpoint, index and create share same endpoint but different HTTP verb
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(bodyData) // strining the data and passing the data 
+    })
+    .then(response => response.json()) // get the response and parsing to JSON
+    .then(kdramas => {
+      console.log(kdramas); // then console loging the response 
+      const kdramasData = kdramas.data
+    // render JSON response
+        const kdramasMarkup =` 
+        <div data-id=${kdramas.id}>
+        <img src=${kdramas.attributes.cover_photo} height="450" width="450">
+        <h3>${kdramas.attributes.title}</h3>
+        <p> ${kdramas.attributes.release_year}<p>
+        <p> ${kdramas.attributes.where_to_watch}<p>
+        <p> ${kdramas.attributes.my_rating}<p>
+        <p> ${kdramas.attributes.comment}<p>
+        <p> ${kdramas.attributes.category.name}<p>
+        <p> ${kdramas.attributes.watched}<p>
+        <button data=id${kdramas.id}>edit</button>
+        </div>
+        <br></br>`;
 
+        document.querySelector('#kdramas-container').innerHTML += kdramasMarkup;
+     
+    })
+  }
 
+// :title, :release_year, :watched, :where_to_watch, :cover_photo, :my_rating, :comment, :category_id, :category
 
 
 
