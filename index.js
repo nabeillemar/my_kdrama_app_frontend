@@ -58,7 +58,7 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
     console.log(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id);
     // build body object
     let bodyData = {title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id}
-  
+    //debugger
     fetch(k_dramasIndexPage, {
       // POST request, the verb is different rails is routing us to the create action it has the same endpoint, index and create share same endpoint but different HTTP verb
       method: "POST",
@@ -67,27 +67,29 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
     })
     .then(response => response.json()) // get the response and parsing to JSON
     .then(kdramas => {
-      console.log(kdramas); // then console loging the response 
-      const kdramasData = kdramas.data
+     // console.log(kdramas); // then console loging the response 
+      //debugger
+      const kdramasData = kdramas // the kdramas object is different from what we had in the get object.. the issue was how the data was coming across need to be careful before it was kdramas.data.attributes , you need to look at the data don't make your life hard
+      //debugger
     // render JSON response
-        const kdramasMarkup =` 
+        const kdramasMarkup =`
         <div data-id=${kdramas.id}>
-        <img src=${kdramas.attributes.cover_photo} height="450" width="450">
-        <h3>${kdramas.attributes.title}</h3>
-        <p> ${kdramas.attributes.release_year}<p>
-        <p> ${kdramas.attributes.where_to_watch}<p>
-        <p> ${kdramas.attributes.my_rating}<p>
-        <p> ${kdramas.attributes.comment}<p>
-        <p> ${kdramas.attributes.category.name}<p>
-        <p> ${kdramas.attributes.watched}<p>
-        <button data=id${kdramas.id}>edit</button>
+        <img src=${kdramasData.cover_photo} height="450" width="450">
+        <h3>${kdramasData.title}</h3>
+        <p> ${kdramasData.release_year}<p>
+        <p> ${kdramasData.where_to_watch}<p>
+        <p> ${kdramasData.my_rating}<p>
+        <p> ${kdramasData.comment}<p>
+        <p> ${kdramasData.category}<p>
+        <p> ${kdramasData.watched}<p>
+        <button data=id${kdramasData.id}>edit</button>
         </div>
         <br></br>`;
 
         document.querySelector('#kdramas-container').innerHTML += kdramasMarkup;
      
     })
-  }
+}
 
 // :title, :release_year, :watched, :where_to_watch, :cover_photo, :my_rating, :comment, :category_id, :category
 
