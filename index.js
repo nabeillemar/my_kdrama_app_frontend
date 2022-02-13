@@ -1,7 +1,8 @@
 const k_dramasIndexPage = "http://localhost:3000/api/v1/k_dramas"
 
 document.addEventListener("DOMContentLoaded", () => {   // We want to listen to the document, we are telling JS to listen to the document and... we want to listen for our DOMContent to be loaded 
-   console.log("DOM LOADED")
+    // fetch and load kdrama
+    console.log("DOM LOADED")
     getKdramas() //bascially the first step the DOMContent Loaded event will do is render the data using this function 
 
    const createKdramaForm = document.querySelector("#create-kdrama-form") 
@@ -17,7 +18,7 @@ function getKdramas() { // we need create a function of this Get fetch request a
     .then(response => response.json())
     .then(kdramas => {
         kdramas.data.forEach(kdramas => { // this part is manipulating the data part 
-            //debugger
+            //debugger // manipulating the DOM  below
             const kdramasMarkup =` 
             <div data-id=${kdramas.id}>
             <img src=${kdramas.attributes.cover_photo} height="450" width="450">
@@ -39,6 +40,9 @@ function getKdramas() { // we need create a function of this Get fetch request a
 }
 
 
+
+
+
 function createFormHandler(e) { // not working? what kind of fetch do we want to make? grabbing all the values for our inputs 
     e.preventDefault()
     const title = document.querySelector('#title').value // how does this get connected to the form updated ? 
@@ -49,12 +53,14 @@ function createFormHandler(e) { // not working? what kind of fetch do we want to
     const watched = document.querySelector('#watched').value
     const my_rating = document.querySelector('#my_rating').value
     const where_to_watch = document.querySelector('#where_to_watch').value
+    //debugger
     postFetch(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, categoryId)
 }
 
 
 function postFetch(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id) { // can name whatever we want here but make sure they are in order 
     // confirm these values are coming through properly
+    //debugger
     console.log(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id);
     // build body object
     let bodyData = {title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id}
@@ -67,9 +73,9 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
     })
     .then(response => response.json()) // get the response and parsing to JSON
     .then(kdramas => {
-     // console.log(kdramas); // then console loging the response 
+        console.log(kdramas); // then console loging the response 
       //debugger
-      const kdramasData = kdramas // the kdramas object is different from what we had in the get object.. the issue was how the data was coming across need to be careful before it was kdramas.data.attributes , you need to look at the data don't make your life hard
+      const kdramasData = kdramas.data.attributes // the kdramas object is different from what we had in the get object.. the issue was how the data was coming across need to be careful before it was kdramas.data.attributes , you need to look at the data don't make your life hard // also this gets connected to the create kdrama action controller. the Serializer matters here so we can get an nested array 
       //debugger
     // render JSON response
         const kdramasMarkup =`
@@ -80,7 +86,7 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
         <p> ${kdramasData.where_to_watch}<p>
         <p> ${kdramasData.my_rating}<p>
         <p> ${kdramasData.comment}<p>
-        <p> ${kdramasData.category}<p>
+        <p> ${kdramasData.category.name}<p>
         <p> ${kdramasData.watched}<p>
         <button data=id${kdramasData.id}>edit</button>
         </div>
@@ -90,6 +96,10 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
      
     })
 }
+
+
+
+
 
 // :title, :release_year, :watched, :where_to_watch, :cover_photo, :my_rating, :comment, :category_id, :category
 
