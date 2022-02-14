@@ -18,7 +18,8 @@ function getKdramas() { // we need create a function of this Get fetch request a
     .then(response => response.json())
     .then(kdramas => {
         kdramas.data.forEach(kdramas => { // this part is manipulating the data part 
-            //debugger // manipulating the DOM  below
+            render(kdramas)
+            /*//debugger // manipulating the DOM  below
             const kdramasMarkup =` 
             <div data-id=${kdramas.id}>
             <img src=${kdramas.attributes.cover_photo} height="450" width="450">
@@ -34,11 +35,30 @@ function getKdramas() { // we need create a function of this Get fetch request a
             <br></br>`;
 
             document.querySelector('#kdramas-container').innerHTML += kdramasMarkup // finding the kdramas_container in the HTML and saying we want to update that container with all this markup code 
+            */
         })  
 
     })
 }
 
+function render(kdramas) {
+    const kdramasMarkup =` 
+            <div data-id=${kdramas.id}>
+            <img src=${kdramas.attributes.cover_photo} height="450" width="450">
+            <h3>${kdramas.attributes.title}</h3>
+            <p> ${kdramas.attributes.release_year}<p>
+            <p> ${kdramas.attributes.where_to_watch}<p>
+            <p> ${kdramas.attributes.my_rating}<p>
+            <p> ${kdramas.attributes.comment}<p>
+            <p> ${kdramas.attributes.category.name}<p>
+            <p> ${kdramas.attributes.watched}<p>
+            <button data=id${kdramas.id}>edit</button>
+            </div>
+            <br></br>`;
+
+            document.querySelector('#kdramas-container').innerHTML += kdramasMarkup
+
+}
 
 
 
@@ -75,24 +95,26 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
     .then(kdramas => {
         console.log(kdramas); // then console loging the response 
       //debugger
-      const kdramasData = kdramas.data.attributes // the kdramas object is different from what we had in the get object.. the issue was how the data was coming across need to be careful before it was kdramas.data.attributes , you need to look at the data don't make your life hard // also this gets connected to the create kdrama action controller. the Serializer matters here so we can get an nested array 
+      const kdramasData = kdramas.data // the kdramas object is different from what we had in the get object.. the issue was how the data was coming across need to be careful before it was kdramas.data.attributes , you need to look at the data don't make your life hard // also this gets connected to the create kdrama action controller. the Serializer matters here so we can get an nested array 
       //debugger
     // render JSON response
-        const kdramasMarkup =`
+        render(kdramasData)
+        /*const kdramasMarkup =`
         <div data-id=${kdramas.id}>
-        <img src=${kdramasData.cover_photo} height="450" width="450">
-        <h3>${kdramasData.title}</h3>
-        <p> ${kdramasData.release_year}<p>
-        <p> ${kdramasData.where_to_watch}<p>
-        <p> ${kdramasData.my_rating}<p>
-        <p> ${kdramasData.comment}<p>
-        <p> ${kdramasData.category.name}<p>
-        <p> ${kdramasData.watched}<p>
+        <img src=${kdramasData.attributes.cover_photo} height="450" width="450">
+        <h3>${kdramasData.attributes.title}</h3>
+        <p> ${kdramasData.attributes.release_year}<p>
+        <p> ${kdramasData.attributes.where_to_watch}<p>
+        <p> ${kdramasData.attributes.my_rating}<p>
+        <p> ${kdramasData.attributes.comment}<p>
+        <p> ${kdramasData.attributes.category.name}<p>
+        <p> ${kdramasData.attributes.watched}<p>
         <button data=id${kdramasData.id}>edit</button>
         </div>
         <br></br>`;
 
         document.querySelector('#kdramas-container').innerHTML += kdramasMarkup;
+        */
      
     })
 }
