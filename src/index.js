@@ -17,7 +17,9 @@ function getKdramas() { // we need create a function of this Get fetch request a
     fetch(k_dramasIndexPage)
     .then(response => response.json())
     .then(kdramas => {
-        kdramas.data.forEach(kdramas => { // this part is manipulating the data part 
+        kdramas.data.forEach(kdramas => { // this part is manipulating the data part //creating new instances of our kdramas using forEach 
+            //debugger
+            let newKdrama = new Kdrama(kdramas, kdramas.attributes)//creating new instances of our kdramas using forEach, goes to my constror in the kdrama.js file // this kdramas.attributes comes from the console, kdramas has access to attributes here  // this is how we create a new instance of our Kdrama class (this calls the kdrama.js) getting the data from API then parsing it json then passing to the kdrama class 
             render(kdramas)
             /*//debugger // manipulating the DOM  below
             const kdramasMarkup =` 
