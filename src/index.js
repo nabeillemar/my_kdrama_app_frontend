@@ -19,8 +19,8 @@ function getKdramas() { // we need create a function of this Get fetch request a
     .then(kdramas => {
         kdramas.data.forEach(kdramas => { // this part is manipulating the data part //creating new instances of our kdramas using forEach 
             //debugger
-            let newKdrama = new Kdrama(kdramas, kdramas.attributes)//creating new instances of our kdramas using forEach, goes to my constror in the kdrama.js file // this kdramas.attributes comes from the console, kdramas has access to attributes here  // this is how we create a new instance of our Kdrama class (this calls the kdrama.js) getting the data from API then parsing it json then passing to the kdrama class 
-            render(kdramas)
+            const newKdrama = new Kdrama(kdramas, kdramas.attributes)//creating new instances of our kdramas using forEach, goes to my constror in the kdrama.js file // this kdramas.attributes comes from the console, kdramas has access to attributes here  // this is how we create a new instance of our Kdrama class (this calls the kdrama.js) getting the data from API then parsing it json then passing to the kdrama class 
+            //render(kdramas)
             /*//debugger // manipulating the DOM  below
             const kdramasMarkup =` 
             <div data-id=${kdramas.id}>
@@ -35,14 +35,13 @@ function getKdramas() { // we need create a function of this Get fetch request a
             <button data=id${kdramas.id}>edit</button>
             </div>
             <br></br>`;
-
-            document.querySelector('#kdramas-container').innerHTML += kdramasMarkup // finding the kdramas_container in the HTML and saying we want to update that container with all this markup code 
             */
+            document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard(); // finding the kdramas_container in the HTML and saying we want to update that container with all this markup code 
         })  
 
     })
 }
-
+/*
 function render(kdramas) {
     const kdramasMarkup =` 
             <div data-id=${kdramas.id}>
@@ -61,7 +60,7 @@ function render(kdramas) {
             document.querySelector('#kdramas-container').innerHTML += kdramasMarkup
 
 }
-
+*/
 
 
 
@@ -96,11 +95,12 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
     .then(response => response.json()) // get the response and parsing to JSON
     .then(kdramas => {
         console.log(kdramas); // then console loging the response 
-      //debugger
-      const kdramasData = kdramas.data // the kdramas object is different from what we had in the get object.. the issue was how the data was coming across need to be careful before it was kdramas.data.attributes , you need to look at the data don't make your life hard // also this gets connected to the create kdrama action controller. the Serializer matters here so we can get an nested array 
+      debugger
+      //const kdramasData = kdramas.data
+      const newKdrama = new Kdrama(kdramas.data, kdramas.data.attributes) // the kdramas object is different from what we had in the get object.. the issue was how the data was coming across need to be careful before it was kdramas.data.attributes , you need to look at the data don't make your life hard // also this gets connected to the create kdrama action controller. the Serializer matters here so we can get an nested array 
       //debugger
     // render JSON response
-        render(kdramasData)
+        //render(kdramasData)
         /*const kdramasMarkup =`
         <div data-id=${kdramas.id}>
         <img src=${kdramasData.attributes.cover_photo} height="450" width="450">
@@ -114,9 +114,9 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
         <button data=id${kdramasData.id}>edit</button>
         </div>
         <br></br>`;
-
-        document.querySelector('#kdramas-container').innerHTML += kdramasMarkup;
         */
+        document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard();;
+        
      
     })
 }
