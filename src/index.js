@@ -1,13 +1,26 @@
 const k_dramasIndexPage = "http://localhost:3000/api/v1/k_dramas"
 
 document.addEventListener("DOMContentLoaded", () => {   // We want to listen to the document, we are telling JS to listen to the document and... we want to listen for our DOMContent to be loaded 
-    // fetch and load kdrama
     console.log("DOM LOADED")
+    // fetch and load kdrama
     getKdramas() //bascially the first step the DOMContent Loaded event will do is render the data using this function 
-
+    // listen for the "submit" event on form and handle data
    const createKdramaForm = document.querySelector("#create-kdrama-form") 
-
    createKdramaForm.addEventListener("submit", (e) => createFormHandler(e))
+   // listen for the "click" event on form and handle data, we are searching the container because that is where the edit button is at
+   const kdramaContainer = document.querySelector('#kdramas-container')
+   kdramaContainer.addEventListener('click', e => {
+       const id = parseInt(e.target.dataset.id); //this parses through the dataset that we clicked on and grabs the id 
+       //kdrama = Kdrama.all
+       //kdrama.find(x => x.id == id)
+       const kdrama = Kdrama.findById(id);
+       //debugger
+       document.querySelector('#update-kdrama').innerHTML += kdrama.renderUpdateForm();
+   });
+    document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e))
+
+
+
 
 })
 
@@ -41,6 +54,7 @@ function getKdramas() { // we need create a function of this Get fetch request a
 
     })
 }
+
 /*
 function render(kdramas) {
     const kdramasMarkup =` 
@@ -77,6 +91,40 @@ function createFormHandler(e) { // not working? what kind of fetch do we want to
     //debugger
     postFetch(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, categoryId)
 }
+
+function updateFormHandler(e) { // not working? what kind of fetch do we want to make? grabbing all the values for our inputs 
+    console.log("update")
+    e.preventDefault()
+    const id = parseInt(e.target.dataset.id);
+    const kdrama = Kdrama.findById(id);
+    const title = e.target.querySelector('#title').value // how does this get connected to the form updated ? 
+    const comment = e.target.querySelector('#comment').value
+    const cover_photo = e.target.querySelector('#cover_photo').value
+    const category_id = parseInt(e.target.querySelector('#categories').value) //the category id 
+    const release_year = e.target.querySelector('#release_year').value
+    const watched = e.target.querySelector('#watched').value
+    const my_rating = e.target.querySelector('#my_rating').value
+    const where_to_watch = e.target.querySelector('#where_to_watch').value
+    //debugger
+    patchSyllabus(kdrama, title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id)
+}
+
+function patchSyllabus(kdrama, title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id){
+    let bodyJSON = {title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id }
+    fetch(`http://localhost:3000/api/v1/k_dramas/${kdrama.id}`,{
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+             Accept: 'application/json', 
+        },
+        body: JSON.stringify(bodyJSON), // strining the data and passing the data 
+    })
+    .then(response => response.json())
+    .then(updatedKdrama => console.log(updatedKdrama));
+    };
+
+
+
 
 
 function postFetch(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id) { // can name whatever we want here but make sure they are in order 
@@ -115,7 +163,7 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
         </div>
         <br></br>`;
         */
-        document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard();;
+        document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard();
         
      
     })
