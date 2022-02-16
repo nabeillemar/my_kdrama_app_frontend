@@ -14,10 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {   // We want to listen to 
        //kdrama = Kdrama.all
        //kdrama.find(x => x.id == id)
        const kdrama = Kdrama.findById(id);
+       console.log(kdrama)
        //debugger
        document.querySelector('#update-kdrama').innerHTML += kdrama.renderUpdateForm();
+       document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
    });
-    document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e))
+    //document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
+   //document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem));
 
 
 
@@ -76,6 +79,22 @@ function render(kdramas) {
 }
 */
 
+function deleteItem(e) {
+    console.log("hi")
+    const id = parseInt(e.target.dataset.id);
+    const kdrama = Kdrama.findById(id);
+    fetch(`http://localhost:3000/k_dramas/${id}`, {
+      method: "DELETE",
+      headers: {
+          "Content-Type": "application/json"
+        }
+    })
+      .then((res) => res.json())
+      .then((kdrama) => {
+        kdrama.remove();
+      });
+  }
+
 
 
 function createFormHandler(e) { // not working? what kind of fetch do we want to make? grabbing all the values for our inputs 
@@ -120,10 +139,12 @@ function patchSyllabus(kdrama, title, release_year, watched, where_to_watch, cov
         body: JSON.stringify(bodyJSON), // strining the data and passing the data 
     })
     .then(response => response.json())
-    .then(updatedKdrama => console.log(updatedKdrama));
-    };
-
-
+    .then(updatedKdrama => {
+        console.log(updatedKdrama);
+        const newKdrama = new Kdrama(updatedKdrama.data, updatedKdrama.data.attributes)
+        document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard()
+    });
+    }
 
 
 

@@ -17,6 +17,17 @@ class Kdrama {
 
     }
 
+    update({title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id}) {
+        this.title = title;
+        this.release_year = release_year;
+        this.watched = watched;
+        this.where_to_watch = where_to_watch;
+        this.my_rating = my_rating;
+        this.comment = comment;
+        this.category = category;
+        this.watched = watched;
+    }
+
     renderKdramaCard() { //created a card this is a refactor adds to the create and get fetch method 
         return`
         <div data-id=${this.id}>
@@ -29,6 +40,7 @@ class Kdrama {
         <p> ${this.category.name}<p>
         <p> ${this.watched}<p>
         <button class="edit-btn" data-id=${this.id}>edit</button>
+        <button class="delete-btn" data-id=${this.id}>delete</button>
         </div>
         <br></br>`;
     }
