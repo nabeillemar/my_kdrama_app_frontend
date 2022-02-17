@@ -17,7 +17,7 @@ class Kdrama {
 
     }
 
-    update({title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id}) {
+    /*update({title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id}) {
         this.title = title;
         this.release_year = release_year;
         this.watched = watched;
@@ -27,6 +27,7 @@ class Kdrama {
         this.category = category;
         this.watched = watched;
     }
+    */
 
     renderKdramaCard() { //created a card this is a refactor adds to the create and get fetch method 
         return`

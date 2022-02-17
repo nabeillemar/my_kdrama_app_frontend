@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {   // We want to listen to 
    const createKdramaForm = document.querySelector("#create-kdrama-form") 
    createKdramaForm.addEventListener("submit", (e) => createFormHandler(e))
    // listen for the "click" event on form and handle data, we are searching the container because that is where the edit button is at
+   /*
    const kdramaContainer = document.querySelector('#kdramas-container')
    kdramaContainer.addEventListener('click', e => {
        const id = parseInt(e.target.dataset.id); //this parses through the dataset that we clicked on and grabs the id 
@@ -17,11 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {   // We want to listen to 
        console.log(kdrama)
        //debugger
        document.querySelector('#update-kdrama').innerHTML += kdrama.renderUpdateForm();
-       document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
+      // document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
    });
-    //document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
-   //document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem));
-
+    document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
+   // document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem));
+*/
 
 
 
@@ -54,8 +55,22 @@ function getKdramas() { // we need create a function of this Get fetch request a
             */
             document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard(); // finding the kdramas_container in the HTML and saying we want to update that container with all this markup code 
         })  
+        document.querySelectorAll('.edit-btn').forEach( (button) => button.addEventListener('click', e => {
+            const id = parseInt(e.target.dataset.id); //this parses through the dataset that we clicked on and grabs the id 
+            //kdrama = Kdrama.all
+            //kdrama.find(x => x.id == id)
+            const kdrama = Kdrama.findById(id);
+            console.log(kdrama)
+            //debugger
+            document.querySelector('#update-kdrama').innerHTML += kdrama.renderUpdateForm();
+            //document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
+        }));
+         document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
+        document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem));
 
+     
     })
+    
 }
 
 /*
@@ -81,18 +96,19 @@ function render(kdramas) {
 
 function deleteItem(e) {
     console.log("hi")
+    //debugger
     const id = parseInt(e.target.dataset.id);
-    const kdrama = Kdrama.findById(id);
-    fetch(`http://localhost:3000/k_dramas/${id}`, {
+    //debugger
+    fetch(`http://localhost:3000/api/v1/k_dramas/${id}`, {
       method: "DELETE",
       headers: {
           "Content-Type": "application/json"
         }
     })
       .then((res) => res.json())
-      .then((kdrama) => {
-        kdrama.remove();
-      });
+      .then((json) => {
+        e.target.parentElement.remove();
+      });// how do I refresh this?
   }
 
 
@@ -143,7 +159,7 @@ function patchSyllabus(kdrama, title, release_year, watched, where_to_watch, cov
         console.log(updatedKdrama);
         const newKdrama = new Kdrama(updatedKdrama.data, updatedKdrama.data.attributes)
         document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard()
-    });
+    });// how to I refresh this? 
     }
 
 
