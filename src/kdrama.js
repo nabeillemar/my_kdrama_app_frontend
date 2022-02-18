@@ -31,7 +31,7 @@ class Kdrama {
 
     renderKdramaCard() { //created a card this is a refactor adds to the create and get fetch method 
         return`
-        <div data-id=${this.id}>
+        <div id='kdrama-${this.id}' data-id=${this.id}>
         <img src=${this.cover_photo} height="550" width="450">
         <h3>${this.title}</h3>
         <p> ${this.release_year}<p>
@@ -62,7 +62,7 @@ class Kdrama {
                     <input id='title' type="text" name="title" value="${this.title}" placeholder="Enter the title of your KDrama..." class="input-text">
                     <br><br>
                     <label>Comment</label>
-                    <textarea id='comment' name="comment" rows="5" cols="50" value="${this.comment}" placeholder="Enter your comments here..."></textarea>
+                    <textarea id='comment' name="comment" rows="5" cols="50" placeholder="Enter your comments here...">${this.comment}</textarea>
                     <br><br>
                     <label>Cover Poster</label>
                     <input id='cover_photo' type="text" name="cover_photo" value="${this.cover_photo}" placeholder="Enter the poster image URL..." class="input-text">

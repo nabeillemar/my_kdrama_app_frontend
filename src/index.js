@@ -1,3 +1,5 @@
+// need to add the automatic refresh button after load pages 
+
 const k_dramasIndexPage = "http://localhost:3000/api/v1/k_dramas"
 
 document.addEventListener("DOMContentLoaded", () => {   // We want to listen to the document, we are telling JS to listen to the document and... we want to listen for our DOMContent to be loaded 
@@ -55,6 +57,7 @@ function getKdramas() { // we need create a function of this Get fetch request a
             */
             document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard(); // finding the kdramas_container in the HTML and saying we want to update that container with all this markup code 
         })  
+        //debugger
         document.querySelectorAll('.edit-btn').forEach( (button) => button.addEventListener('click', e => {
             const id = parseInt(e.target.dataset.id); //this parses through the dataset that we clicked on and grabs the id 
             //kdrama = Kdrama.all
@@ -106,11 +109,23 @@ function deleteItem(e) {
         }
     })
       .then((res) => res.json())
-      .then((json) => {
-        e.target.parentElement.remove();
+      .then((kdrama) => {
+          console.log("delete")
+         //debugger
+        //kdrama.target.parentElement.remove();
+        document.querySelector(`#kdrama-${kdrama.id}`).remove()
       });// how do I refresh this?
   }
 
+/*
+  .then(response => response.json())
+  .then(updatedKdrama => {
+      console.log(updatedKdrama);
+      const newKdrama = new Kdrama(updatedKdrama.data, updatedKdrama.data.attributes)
+
+      document.querySelector(`#kdrama-${kdrama.id}`).remove()
+      document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard()
+      */
 
 
 function createFormHandler(e) { // not working? what kind of fetch do we want to make? grabbing all the values for our inputs 
@@ -158,6 +173,8 @@ function patchSyllabus(kdrama, title, release_year, watched, where_to_watch, cov
     .then(updatedKdrama => {
         console.log(updatedKdrama);
         const newKdrama = new Kdrama(updatedKdrama.data, updatedKdrama.data.attributes)
+
+        document.querySelector(`#kdrama-${kdrama.id}`).remove()
         document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard()
     });// how to I refresh this? 
     }
@@ -180,7 +197,7 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
     .then(response => response.json()) // get the response and parsing to JSON
     .then(kdramas => {
         console.log(kdramas); // then console loging the response 
-      debugger
+      //debugger
       //const kdramasData = kdramas.data
       const newKdrama = new Kdrama(kdramas.data, kdramas.data.attributes) // the kdramas object is different from what we had in the get object.. the issue was how the data was coming across need to be careful before it was kdramas.data.attributes , you need to look at the data don't make your life hard // also this gets connected to the create kdrama action controller. the Serializer matters here so we can get an nested array 
       //debugger
