@@ -5,10 +5,11 @@ const k_dramasIndexPage = "http://localhost:3000/api/v1/k_dramas"
 document.addEventListener("DOMContentLoaded", () => {   // We want to listen to the document, we are telling JS to listen to the document and... we want to listen for our DOMContent to be loaded 
     console.log("DOM LOADED")
     // fetch and load kdrama
-    getKdramas() //bascially the first step the DOMContent Loaded event will do is render the data using this function 
+    getKdramas()
+    console.log("initally getting all the Kdramas with buttons") //bascially the first step the DOMContent Loaded event will do is render the data using this function 
     // listen for the "submit" event on form and handle data
    const createKdramaForm = document.querySelector("#create-kdrama-form") 
-   createKdramaForm.addEventListener("submit", (e) => createFormHandler(e))
+   createKdramaForm.addEventListener("submit", e => createFormHandler(e));
    // listen for the "click" event on form and handle data, we are searching the container because that is where the edit button is at
    /*
    const kdramaContainer = document.querySelector('#kdramas-container')
@@ -27,9 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {   // We want to listen to 
 */
 
 
-
 })
-
 
 
 function getKdramas() { // we need create a function of this Get fetch request and add it to the DOMContentLoaded event 
@@ -59,17 +58,21 @@ function getKdramas() { // we need create a function of this Get fetch request a
         })  
         //debugger
         document.querySelectorAll('.edit-btn').forEach( (button) => button.addEventListener('click', e => {
+            console.log("edit button click within getKdramas")
             const id = parseInt(e.target.dataset.id); //this parses through the dataset that we clicked on and grabs the id 
             //kdrama = Kdrama.all
             //kdrama.find(x => x.id == id)
             const kdrama = Kdrama.findById(id);
-            console.log(kdrama)
+            //debugger
+            //console.log(kdrama)
             //debugger
             document.querySelector('#update-kdrama').innerHTML += kdrama.renderUpdateForm();
             //document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
         }));
          document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
-        document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem));
+         console.log("UpdateFormHandler called from GetKdramas ")
+         //debugger
+        document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem))
 
      
     })
@@ -98,7 +101,7 @@ function render(kdramas) {
 */
 
 function deleteItem(e) {
-    console.log("hi")
+    console.log("Delete Function Called")
     //debugger
     const id = parseInt(e.target.dataset.id);
     //debugger
@@ -129,6 +132,7 @@ function deleteItem(e) {
 
 
 function createFormHandler(e) { // not working? what kind of fetch do we want to make? grabbing all the values for our inputs 
+    console.log("Calling CreateFromHandler")
     e.preventDefault()
     const title = document.querySelector('#title').value // how does this get connected to the form updated ? 
     const comment = document.querySelector('#comment').value
@@ -143,7 +147,7 @@ function createFormHandler(e) { // not working? what kind of fetch do we want to
 }
 
 function updateFormHandler(e) { // not working? what kind of fetch do we want to make? grabbing all the values for our inputs 
-    console.log("update")
+    console.log("UPDATE FORMHANDLER CALLED")
     e.preventDefault()
     const id = parseInt(e.target.dataset.id);
     const kdrama = Kdrama.findById(id);
@@ -156,10 +160,11 @@ function updateFormHandler(e) { // not working? what kind of fetch do we want to
     const my_rating = e.target.querySelector('#my_rating').value
     const where_to_watch = e.target.querySelector('#where_to_watch').value
     //debugger
-    patchSyllabus(kdrama, title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id)
+    patchKdrama(kdrama, title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id)
 }
 
-function patchSyllabus(kdrama, title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id){
+function patchKdrama(kdrama, title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id){
+    console.log("PATCH REQUEST CALLED")
     let bodyJSON = {title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id }
     fetch(`http://localhost:3000/api/v1/k_dramas/${kdrama.id}`,{
         method: "PATCH",
@@ -173,16 +178,63 @@ function patchSyllabus(kdrama, title, release_year, watched, where_to_watch, cov
     .then(updatedKdrama => {
         console.log(updatedKdrama);
         const newKdrama = new Kdrama(updatedKdrama.data, updatedKdrama.data.attributes)
-
+       // debugger
         document.querySelector(`#kdrama-${kdrama.id}`).remove()
+        console.log("old card deleted Within Patch Request")
+       // debugger
+        //document.querySelector('#update-kdrama').remove()
+       // let id = kdrama.id
+        //debugger
         document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard()
-    });// how to I refresh this? 
-    }
+        console.log("Updated Card added Within patch Request")
+       // debugger
+        const myDiv = parseInt(document.querySelector('#render-update-form').dataset.id.toString())
+        if (myDiv == kdrama.id) {
+            document.querySelector('#render-update-form').remove()
+        }
+        //debugger
+        console.log("old update form removed within Patch Request")// after this it still shows the render-update-form in the console
+       // debugger // can't reset update form becuase it just resets to previous values, does not CLEAR or Re-render the form, 
+        // this current way you can only edit once back to back you can't edit it twice back to back 
+        // also when I added the data below, it allows to mulitple clicks on the edit and delete button 
+        // first time I submit edit button it works, 2nd time I click it it it pulls up the previous one values, still submits, 3rd time the edit and delete button don't work 
+        // TYPEERROR cannot read properties of null 
+  // how to I refresh this?
+        //debugger
+        document.querySelectorAll('.edit-btn').forEach( (button) => button.addEventListener('click', e => {
+            console.log("edit button click within patch Request")
+        const id = parseInt(e.target.dataset.id); //this parses through the dataset that we clicked on and grabs the id 
+        //kdrama = Kdrama.all
+        //kdrama.find(x => x.id == id)
+        const kdrama = Kdrama.findById(id);
+        //debugger
+        //console.log(kdrama)
+        //debugger
+        document.querySelector('#update-kdrama').innerHTML += kdrama.renderUpdateForm();
+        console.log("Update form rendered within Patch Request")
+        //debugger
+        //document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
 
+}));
+    document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem));
+    //debugger
+    console.log("Does this work? kdrama form update ")
+    document.getElementById("create-kdrama-form").reset();
 
+    })
+}
+
+/*    TODO
+1. add Validations on Backend 
+2. Clear out Comments
+3. Refactor 
+4. See if you can get rid of the mulitple click sitation, bascially we can click the edit button multiple times 
+5. 
+*/
 
 function postFetch(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id) { // can name whatever we want here but make sure they are in order 
     // confirm these values are coming through properly
+    console.log("Calling PostFetch")
     //debugger
     console.log(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id);
     // build body object
@@ -200,7 +252,7 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
       //debugger
       //const kdramasData = kdramas.data
       const newKdrama = new Kdrama(kdramas.data, kdramas.data.attributes) // the kdramas object is different from what we had in the get object.. the issue was how the data was coming across need to be careful before it was kdramas.data.attributes , you need to look at the data don't make your life hard // also this gets connected to the create kdrama action controller. the Serializer matters here so we can get an nested array 
-      //debugger
+     // debugger
     // render JSON response
         //render(kdramasData)
         /*const kdramasMarkup =`
@@ -218,11 +270,39 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
         <br></br>`;
         */
         document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard();
-        
+        console.log("Within PostFetch Rendering the Kdrama container with the new KdramaCard")
+        //window.location.reload();
+
+        document.querySelectorAll('.edit-btn').forEach( (button) => button.addEventListener('click', e => {
+            console.log("edit button click within Post Fetch")
+            const id = parseInt(e.target.dataset.id); //this parses through the dataset that we clicked on and grabs the id 
+            //kdrama = Kdrama.all
+            //kdrama.find(x => x.id == id)
+            const kdrama = Kdrama.findById(id);
+            //debugger
+            //debugger
+            document.querySelector('#update-kdrama').innerHTML += kdrama.renderUpdateForm();
+            console.log("Renders Update Form within Post Fetch")
+            //debugger
+            //document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
+            console.log("Calls UpdateFormHandler from POST FETCH")
+        }));
+        console.log("EDIT button Functionality with Post Fetch")
+
+
+        //let id = kdrama.id
+         //document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
+        document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem));
+        console.log("Delete button Functionality with Post Fetch")
+        document.getElementById("create-kdrama-form").reset();
+        console.log("Resets the Create-form")
+        //debugger 
+        //document.getElementsByName(`${id}`).reset();
+       // document.getElementById("update-kdrama").reset();
      
     })
+ 
 }
-
 
 
 

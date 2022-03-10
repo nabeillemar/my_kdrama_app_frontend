@@ -54,7 +54,8 @@ class Kdrama {
 
     renderUpdateForm() {
         return `
-        <form data-id=${this.id}>
+        
+        <form id="render-update-form" data-id=${this.id} name="${this.id}">
             <h3> Edit this KDrama!</h3>
             <p>"${this.id}"<p>
 
