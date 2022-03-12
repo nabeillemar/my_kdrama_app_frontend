@@ -24,13 +24,7 @@ function getKdramas() { // we need create a function of this Get fetch request a
             document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard(); // finding the kdramas_container in the HTML and saying we want to update that container with all this markup code 
         })  
         //debugger
-        document.querySelectorAll('.edit-btn').forEach( (button) => button.addEventListener('click', e => {
-            console.log("edit button click within getKdramas")
-            const id = parseInt(e.target.dataset.id); //this parses through the dataset that we clicked on and grabs the id 
-            const kdrama = Kdrama.findById(id);
-            document.querySelector('#update-kdrama').innerHTML += kdrama.renderUpdateForm();
-            //document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
-        }));
+        editButton()
          document.querySelector('#update-kdrama').addEventListener('submit', e => updateFormHandler(e));
          console.log("UpdateFormHandler called from GetKdramas ")
          //debugger
@@ -41,113 +35,117 @@ function getKdramas() { // we need create a function of this Get fetch request a
     
 }
 
-function deleteItem(e) {
-    console.log("Delete Function Called")
-    //debugger
-    const id = parseInt(e.target.dataset.id);
-    //debugger
-    fetch(`http://localhost:3000/api/v1/k_dramas/${id}`, {
-      method: "DELETE",
-      headers: {
-          "Content-Type": "application/json"
-        }
-    })
-      .then((res) => res.json())
-      .then((kdrama) => {
-          console.log("delete")
-         //debugger
-        document.querySelector(`#kdrama-${kdrama.id}`).remove()
-      });
-  }
-
-
-function createFormHandler(e) { 
-    console.log("Calling CreateFromHandler")
-    e.preventDefault()
-    const title = document.querySelector('#title').value 
-    const comment = document.querySelector('#comment').value
-    const cover_photo = document.querySelector('#cover_photo').value
-    const categoryId = parseInt(document.querySelector('#categories').value) //the category id 
-    const release_year = document.querySelector('#release_year').value
-    const watched = document.querySelector('#watched').value
-    const my_rating = document.querySelector('#my_rating').value
-    const where_to_watch = document.querySelector('#where_to_watch').value
-    //debugger
-    postFetch(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, categoryId)
-}
-
-function updateFormHandler(e) { 
-    console.log("UPDATE FORMHANDLER CALLED")
-    e.preventDefault()
-    const id = parseInt(e.target.dataset.id);
-    const kdrama = Kdrama.findById(id);
-    const title = e.target.querySelector('#title').value 
-    const comment = e.target.querySelector('#comment').value
-    const cover_photo = e.target.querySelector('#cover_photo').value
-    const category_id = parseInt(e.target.querySelector('#categories').value) //the category id 
-    const release_year = e.target.querySelector('#release_year').value
-    const watched = e.target.querySelector('#watched').value
-    const my_rating = e.target.querySelector('#my_rating').value
-    const where_to_watch = e.target.querySelector('#where_to_watch').value
-    //debugger
-    patchKdrama(kdrama, title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id)
-}
-
-function patchKdrama(kdrama, title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id){
-    console.log("PATCH REQUEST CALLED")
-    let bodyJSON = {title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id }
-    fetch(`http://localhost:3000/api/v1/k_dramas/${kdrama.id}`,{
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-             Accept: 'application/json', 
-        },
-        body: JSON.stringify(bodyJSON), // strining the data and passing the data 
-    })
-    .then(response => response.json())
-    .then(updatedKdrama => {
-        console.log(updatedKdrama);
-        const newKdrama = new Kdrama(updatedKdrama.data, updatedKdrama.data.attributes)
-       // debugger
-        document.querySelector(`#kdrama-${kdrama.id}`).remove()
-        console.log("old card deleted Within Patch Request")
-       // debugger
-        //debugger
-        document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard()
-        console.log("Updated Card added Within patch Request")
-       // debugger
-        const myDiv = parseInt(document.querySelector('#render-update-form').dataset.id.toString())
-        if (myDiv == kdrama.id) {
-            document.querySelector('#render-update-form').remove()
-        }
-        //debugger
-        console.log("old update form removed within Patch Request")
-        //debugger
+    function editButton(){
         document.querySelectorAll('.edit-btn').forEach( (button) => button.addEventListener('click', e => {
-            console.log("edit button click within patch Request")
-        const id = parseInt(e.target.dataset.id); //this parses through the dataset that we clicked on and grabs the id 
+            console.log("edit button click within getKdramas")
+            const id = parseInt(e.target.dataset.id); //this parses through the dataset that we clicked on and grabs the id 
+            const kdrama = Kdrama.findById(id);
+            document.querySelector('#update-kdrama').innerHTML += kdrama.renderUpdateForm();
+        }));
+    }
+
+
+
+    function deleteItem(e) {
+        console.log("Delete Function Called")
+        //debugger
+        const id = parseInt(e.target.dataset.id);
+        //debugger
+        fetch(`http://localhost:3000/api/v1/k_dramas/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+            }
+        })
+        .then((res) => res.json())
+        .then((kdrama) => {
+            console.log("delete")
+            //debugger
+            document.querySelector(`#kdrama-${kdrama.id}`).remove()
+        });
+    }
+
+
+    function createFormHandler(e) { 
+        console.log("Calling CreateFromHandler")
+        e.preventDefault()
+        const title = document.querySelector('#title').value 
+        const comment = document.querySelector('#comment').value
+        const cover_photo = document.querySelector('#cover_photo').value
+        const categoryId = parseInt(document.querySelector('#categories').value) //the category id 
+        const release_year = document.querySelector('#release_year').value
+        const watched = document.querySelector('#watched').value
+        const my_rating = document.querySelector('#my_rating').value
+        const where_to_watch = document.querySelector('#where_to_watch').value
+        //debugger
+        postFetch(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, categoryId)
+    }
+
+    function updateFormHandler(e) { 
+        console.log("UPDATE FORMHANDLER CALLED")
+        e.preventDefault()
+        const id = parseInt(e.target.dataset.id);
         const kdrama = Kdrama.findById(id);
-        document.querySelector('#update-kdrama').innerHTML += kdrama.renderUpdateForm();
-        console.log("Update form rendered within Patch Request")
+        const title = e.target.querySelector('#title').value 
+        const comment = e.target.querySelector('#comment').value
+        const cover_photo = e.target.querySelector('#cover_photo').value
+        const category_id = parseInt(e.target.querySelector('#categories').value) //the category id 
+        const release_year = e.target.querySelector('#release_year').value
+        const watched = e.target.querySelector('#watched').value
+        const my_rating = e.target.querySelector('#my_rating').value
+        const where_to_watch = e.target.querySelector('#where_to_watch').value
+        //debugger
+        patchKdrama(kdrama, title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id)
+    }
 
-}));
-    document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem));
-    //debugger
-    console.log("Does this work? kdrama form update ")
-    document.getElementById("create-kdrama-form").reset();
+    function patchKdrama(kdrama, title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id){
+        console.log("PATCH REQUEST CALLED")
+        let bodyJSON = {title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id }
+        fetch(`http://localhost:3000/api/v1/k_dramas/${kdrama.id}`,{
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: 'application/json', 
+            },
+            body: JSON.stringify(bodyJSON), // strining the data and passing the data 
+        })
+        .then(response => response.json())
+        .then(updatedKdrama => {
+            console.log(updatedKdrama);
+            const newKdrama = new Kdrama(updatedKdrama.data, updatedKdrama.data.attributes)
+        // debugger
+            document.querySelector(`#kdrama-${kdrama.id}`).remove()
+            console.log("old card deleted Within Patch Request")
+        // debugger
+            //debugger
+            document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard()
+            console.log("Updated Card added Within patch Request")
+        // debugger
+            const myDiv = parseInt(document.querySelector('#render-update-form').dataset.id.toString())
+            if (myDiv == kdrama.id) {
+                document.querySelector('#render-update-form').remove()
+            }
+            //debugger
+            console.log("old update form removed within Patch Request")
+            //debugger
+        editButton()
+        document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem));
+        //debugger
+        console.log("Does this work? kdrama form update ")
+        document.getElementById("create-kdrama-form").reset();
 
-    })
-    .catch((error) => {
-        debugger
-        alert(error);
-    });
-}
+        })
+        .catch((error) => {
+            debugger
+            alert(error);
+        });
+    }
+
 
 /*    TODO
 1. add Validations on Backend (COMPLETED)
 2. Clear out Comments (ALMOST DONE)
-3. Refactor 
-4. See if you can get rid of the mulitple click sitation, bascially we can click the edit button multiple times (ASK TAO)
+3. Refactor (Done)
 5. Ask Tao about .Catch Error messages
 */
 
@@ -174,16 +172,7 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
         document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard();
         console.log("Within PostFetch Rendering the Kdrama container with the new KdramaCard")
 
-        document.querySelectorAll('.edit-btn').forEach( (button) => button.addEventListener('click', e => {
-            console.log("edit button click within Post Fetch")
-            const id = parseInt(e.target.dataset.id); //this parses through the dataset that we clicked on and grabs the id 
-            const kdrama = Kdrama.findById(id);
-            //debugger
-            //debugger
-            document.querySelector('#update-kdrama').innerHTML += kdrama.renderUpdateForm();
-            console.log("Renders Update Form within Post Fetch")
-            console.log("Calls UpdateFormHandler from POST FETCH")
-        }));
+       editButton()
         console.log("EDIT button Functionality with Post Fetch")
 
         document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem));
@@ -191,7 +180,6 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
         document.getElementById("create-kdrama-form").reset();
         console.log("Resets the Create-form")
         //debugger 
-     
     })
     .catch((error) => {
         debugger
