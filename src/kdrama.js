@@ -104,6 +104,5 @@ class Kdrama {
 
 }
 
-Kdrama.all = []; //becomes more valuable 
+Kdrama.all = []; 
 
-// question not sure why the category.name is not working in the update form, how would i debug this?

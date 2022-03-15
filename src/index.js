@@ -112,6 +112,15 @@ function getKdramas() { // we need create a function of this Get fetch request a
         .then(response => response.json())
         .then(updatedKdrama => {
             console.log(updatedKdrama);
+            if (updatedKdrama.errors != undefined){
+                // if (kdramas == !kdramas.errors == []){
+                     console.log(updatedKdrama.errors)
+                     debugger
+                     alert(updatedKdrama.errors)
+                 } else {
+                     debugger
+                     alert("Submitted")
+                 }
             const newKdrama = new Kdrama(updatedKdrama.data, updatedKdrama.data.attributes)
         // debugger
             document.querySelector(`#kdrama-${kdrama.id}`).remove()
@@ -135,29 +144,16 @@ function getKdramas() { // we need create a function of this Get fetch request a
         document.getElementById("create-kdrama-form").reset();
 
         })
-        .catch((error) => {
-            debugger
-            alert(error);
-        });
     }
-
-
-/*    TODO
-1. add Validations on Backend (COMPLETED)
-2. Clear out Comments (ALMOST DONE)
-3. Refactor (Done)
-5. Ask Tao about .Catch Error messages
-*/
-
 
 
 
 function postFetch(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id) { 
     console.log("Calling PostFetch")
-    //debugger
+   // debugger
     console.log(title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id);
     let bodyData = {title, release_year, watched, where_to_watch, cover_photo, my_rating, comment, category_id}
-    //debugger
+  //  debugger
     fetch(k_dramasIndexPage, {
       // POST request, the verb is different rails is routing us to the create action it has the same endpoint, index and create share same endpoint but different HTTP verb
       method: "POST",
@@ -165,26 +161,33 @@ function postFetch(title, release_year, watched, where_to_watch, cover_photo, my
       body: JSON.stringify(bodyData) // strining the data and passing the data 
     })
     .then(response => response.json()) // get the response and parsing to JSON
-    .then(kdramas => {
-        console.log(kdramas); // then console loging the response 
-      const newKdrama = new Kdrama(kdramas.data, kdramas.data.attributes) // the kdramas object is different from what we had in the get object.. the issue was how the data was coming across need to be careful before it was kdramas.data.attributes , you need to look at the data don't make your life hard // also this gets connected to the create kdrama action controller. the Serializer matters here so we can get an nested array 
-     // debugger
-        document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard();
-        console.log("Within PostFetch Rendering the Kdrama container with the new KdramaCard")
+    .then(kdramas => { //kdramas.errors or kdramas.data
+           // debugger
+            if (kdramas.errors != undefined){
+           // if (kdramas == !kdramas.errors == []){
+                console.log(kdramas.errors)
+                debugger
+                alert(kdramas.errors)
+            } else {
+                debugger
+                alert("Submitted")
+            }
 
-       editButton()
-        console.log("EDIT button Functionality with Post Fetch")
+            const newKdrama = new Kdrama(kdramas.data, kdramas.data.attributes) // the kdramas object is different from what we had in the get object.. the issue was how the data was coming across need to be careful before it was kdramas.data.attributes , you need to look at the data don't make your life hard // also this gets connected to the create kdrama action controller. the Serializer matters here so we can get an nested array 
+            debugger
+               document.querySelector('#kdramas-container').innerHTML += newKdrama.renderKdramaCard();
+               console.log("Within PostFetch Rendering the Kdrama container with the new KdramaCard")
+       
+               editButton()
+               console.log("EDIT button Functionality with Post Fetch")
+       
+               document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem));
+               console.log("Delete button Functionality with Post Fetch")
+               document.getElementById("create-kdrama-form").reset();
+               console.log("Resets the Create-form")
 
-        document.querySelectorAll(".delete-btn").forEach((btn) => btn.addEventListener("click", deleteItem));
-        console.log("Delete button Functionality with Post Fetch")
-        document.getElementById("create-kdrama-form").reset();
-        console.log("Resets the Create-form")
-        //debugger 
+        
     })
-    .catch((error) => {
-        debugger
-        alert(error);
-    });
  
 }
 
