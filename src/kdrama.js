@@ -1,9 +1,9 @@
 class Kdrama {
 
-    constructor(kdramas, kdramaAttributes) { //we are creating new instances 
-        //debugger // put it there so we don't assume our data good to test it out 
+    constructor(kdramas, kdramaAttributes) { 
+        
         this.id = kdramas.id
-        //debugger
+       
         this.cover_photo = kdramaAttributes.cover_photo
         this.title = kdramaAttributes.title
         this.release_year = kdramaAttributes.release_year
@@ -12,33 +12,38 @@ class Kdrama {
         this.comment = kdramaAttributes.comment
         this.category = kdramaAttributes.category
         this.watched = kdramaAttributes.watched
-        Kdrama.all.push(this); // that new instance gets pushed to the new array called Kdrama.all
-        //debugger
+        Kdrama.all.push(this); 
+        
 
     }
 
-    renderKdramaCard() { //created a card this is a refactor adds to the create and get fetch method 
+    renderKdramaCard() { 
         return`
         <div id='kdrama-${this.id}' data-id=${this.id}>
-        <img src=${this.cover_photo} height="550" width="450">
-        <h3>${this.title}</h3>
-        <p> ${this.release_year}<p>
-        <p> ${this.where_to_watch}<p>
-        <p> ${this.my_rating}<p>
-        <p> ${this.comment}<p>
-        <p> ${this.category.name}<p>
-        <p> ${this.watched}<p>
+        <div id="column">
+        <div id="Kdrama-card">
+        <img src=${this.cover_photo} height="650" width="550">
+        <h2> Title: ${this.title}</h2>
+        <p> Release Year: ${this.release_year}<p>
+        <p> Platform: ${this.where_to_watch}<p>
+        <p> My Rating: ${this.my_rating}<p>
+        <p> Genre: ${this.category.name}<p>
+        <p> Watched? ${this.watched}<p>
+        <p> Comment: ${this.comment}<p>
         
 
         <button id='edit-btn' class="edit-btn" data-id=${this.id}>edit</button>
         <button class="delete-btn" data-id=${this.id}>delete</button>
+        </div>
+        </div>
+        </div>
         </div>
         <br></br>`;
     }
 
 
     static findById(id) {
-        //debugger
+
         return this.all.find(kdrama => kdrama.id == id);
     }
 
@@ -47,13 +52,8 @@ class Kdrama {
         
         <form id="render-update-form" data-id=${this.id} name="${this.id}">
             <h3> Edit this KDrama!</h3>
-            <p>"${this.id}"<p>
-
             <label>Title</label>
-                    <input id='title' type="text" name="title" value="${this.title}" placeholder="Enter the title of your KDrama..." class="input-text">
-                    <br><br>
-                    <label>Comment</label>
-                    <textarea id='comment' name="comment" rows="5" cols="50" placeholder="Enter your comments here...">${this.comment}</textarea>
+                    <input id='title' type="text" name="title" value="${this.title}" placeholder="Enter the title of your KDrama..." class="input-text" size="30">
                     <br><br>
                     <label>Cover Poster</label>
                     <input id='cover_photo' type="text" name="cover_photo" value="${this.cover_photo}" placeholder="Enter the poster image URL..." class="input-text">
@@ -71,9 +71,7 @@ class Kdrama {
                     <input id='where_to_watch' type="text" name="where_to_watch" value="${this.where_to_watch}" placeholder="Where can you watch it?" class="input-text">
                     <br><br>
 
-                    <label>Category</label>
-                    <p> Choose a Genre</p>
-                    <select id="categories" name="categories" value="${this.category}"> 
+                    <p> Choose a Genre: <select id="categories" name="categories" value="${this.category}"><p/>
                     <option value="1">Action</option>
                     <option value="2">Romance</option>
                     <option value="3">Gender Reversal</option>
@@ -91,6 +89,10 @@ class Kdrama {
 
 
                     </select>
+                    <br><br>
+
+                    <label>Comment</label>
+                    <textarea id='comment' name="comment" rows="5" cols="50" placeholder="Enter your comments here...">${this.comment}</textarea>
                     <br><br>
 
                     <input id='edit-button' type="submit" name="submit" value="Edit your KDrama" class="submit">

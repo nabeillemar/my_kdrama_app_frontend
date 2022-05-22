@@ -1,0 +1,48 @@
+body {
+    background-color: #99ddff;
+}
+
+.form-container {
+    padding: 10px;
+    padding: 20px;
+    text-align: center;
+    border-style: single;
+    margin-bottom: 1%;
+
+}
+
+.title {
+    text-align: center;
+}
+
+
+#kdramas-container {
+    display: grid;
+    
+}
+
+#Kdrama-card {
+    padding: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    background-color: #e6e6ff;
+    border-style: single;
+    width:max-content;
+    margin-left: 150%;
+    margin-right: 150%;
+
+}
+
+
+#column {
+    float: left;
+    width: 25%;
+    padding: 0 10px;
+
+  }
+
+ #update-kdrama {
+     text-align: center;
+     
+ }

@@ -3,24 +3,26 @@
     <head>
         <meta charset="utf-8">
         <title></title>
-        <script type="text/javascript" src="src/index.js"></script> <!-- this is the code we need in order to connect it to Javascript file with the HTML file, HTML file will render the frontend, but instead of refreshing new erb file we are going to use JS to maniuplate the DOM -->
+        <script type="text/javascript" src="src/index.js"></script>
         <script type="text/javascript" src="src/kdrama.js"></script>
+        <link href="index.css" rel="stylesheet">
     </head>
     <body>
 
-        
+        <div class="title">
+            <h1>Welcome to My KDrama Tracker APP</h1>
+
+        </div>
+
             <div class="form-container">
                 <form id="create-kdrama-form" style="">
-                    <h3> Add Your KDrama!</h3>
+                    <h2> Add Your KDrama!</h2>
 
                     <label>Title</label>
-                    <input id='title' type="text" name="title" value="" placeholder="Enter the title of your KDrama..." class="input-text">
-                    <br><br>
-                    <label>Comment</label>
-                    <textarea id='comment' name="comment" rows="5" cols="50" value="" placeholder="Enter your comments here..."></textarea>
+                    <input id='title' type="text" name="title" value="" placeholder="Enter the title of your KDrama..." class="input-text" size="30">
                     <br><br>
                     <label>Cover Poster</label>
-                    <input id='cover_photo' type="text" name="cover_photo" value="" placeholder="Enter the poster image URL..." class="input-text">
+                    <input id='cover_photo' type="text" name="cover_photo" value="" placeholder="Enter the poster image URL..." class="input-text" size="30">
                     <br><br>
                     <label>Release Year</label>
                     <input id='release_year' type="text" name="release_year" value="" placeholder="Release Year" class="input-text">
@@ -33,11 +35,7 @@
                     <br><br>
                     <label>Where can you watch it?</label>
                     <input id='where_to_watch' type="text" name="where_to_watch" value="" placeholder="Where can you watch it?" class="input-text">
-                    <br><br>
-                    
-                    <label>Category</label>
-                    <p> Choose a Genre</p>
-                    <select id="categories" name="categories">
+                    <p>Choose a Genre: <select id="categories" name="categories"></p>
                     <option value="1">Action</option>
                     <option value="2">Romance</option>
                     <option value="3">Gender Reversal</option>
@@ -55,6 +53,9 @@
 
                     </select>
                     <br><br>
+                    <label>Comment:</label>
+                    <textarea id='comment' name="comment" rows="5" cols="50" value="" placeholder="Enter your comments here..."></textarea>
+                    <br><br>
 
                     <input id= 'create-button' type="submit" name="submit" value="Add your KDrama!" class="submit">
                     <br><br>
@@ -64,7 +65,7 @@
 
             </div>
 
-            <div id="update-kdrama"> <!--where does this go?-->
+            <div id="update-kdrama"> 
                 
             </div>
 
